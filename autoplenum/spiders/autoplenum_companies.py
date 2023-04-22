@@ -1,3 +1,4 @@
+import logging
 import scrapy
 
 
@@ -19,5 +20,7 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        pass
+        companyname = response.xpath(
+            '//section[@id="header"]//h1[@itemprop="name"]/text()').get()
+        self.log(companyname)
 
