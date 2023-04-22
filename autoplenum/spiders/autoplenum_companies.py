@@ -1,5 +1,7 @@
 import logging
 import scrapy
+from ..items import AutoplenumItem
+from scrapy.loader import ItemLoader
 
 
 class AutoplenumCompaniesSpider(scrapy.Spider):
@@ -20,7 +22,13 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
+        loader = ItemLoader(item=AutoplenumItem())
         companyname = response.xpath(
-            '//section[@id="header"]//h1[@itemprop="name"]/text()').get()
-        self.log(companyname)
+            '//section[@id="header"]//h1[@itemprop="name"]/text()'
+        ).get()
+        
+        loader.add_value('companyname', companyname)
 
+        item = loader.load_item()
+    
+        yield item
