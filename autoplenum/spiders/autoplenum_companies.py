@@ -43,7 +43,21 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
         loader.add_value('locality', locality)
 
 
-        
+        reviews = response.xpath(
+            '//section[@id="reviews"]/h2[@itemprop="aggregateRating"]'
+        )
+        review_count = reviews.xpath(
+            './span[@itemprop="reviewCount"]/@content'
+        ).get()
+        loader.add_value('review_count', review_count)
+        rating_count = reviews.xpath(
+            './span[@itemprop="reviewCount"]/@content'
+        ).get()
+        loader.add_value('rating_count', rating_count)
+        rating_average = reviews.xpath(
+            './span[@itemprop="ratingValue"]/@content'
+        ).get()
+        loader.add_value('rating_average', rating_average)
 
         item = loader.load_item()
     
