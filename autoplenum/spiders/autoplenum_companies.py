@@ -26,8 +26,24 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
         companyname = response.xpath(
             '//section[@id="header"]//h1[@itemprop="name"]/text()'
         ).get()
-        
         loader.add_value('companyname', companyname)
+        contact = response.xpath('//section[@id="contact"]')
+        address = contact.xpath('.//div[@itemprop="address"]')
+        street = address.xpath(
+            './span[@itemprop="streetAddress"]/text()'
+        ).get()
+        loader.add_value('street', street)
+        postalcode = address.xpath(
+            './span[@itemprop="postalCode"]/text()'
+        ).get()
+        loader.add_value('postalcode', postalcode)
+        locality = address.xpath(
+            './span[@itemprop="addressLocality"]/text()'
+        ).get()
+        loader.add_value('locality', locality)
+
+
+        
 
         item = loader.load_item()
     
