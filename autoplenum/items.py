@@ -19,3 +19,6 @@ class AutoplenumItem(scrapy.Item):
     review_count = Field()
     rating_count = Field()
     rating_average = Field()
+
+    latitude = Field()
+    longitude = Field()
