@@ -42,6 +42,17 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
         ).get()
         loader.add_value('locality', locality)
 
+        geo = contact.xpath('.//span[@itemprop="geo"]')
+        latitude = geo.xpath(
+            './meta[@itemprop="latitude"]/@content'
+        ).get()
+        loader.add_value('latitude', latitude)
+        longitude = geo.xpath(
+            './meta[@itemprop="longitude"]/@content'
+        ).get()
+        loader.add_value('longitude', longitude)
+
+
 
         reviews = response.xpath(
             '//section[@id="reviews"]/h2[@itemprop="aggregateRating"]'
