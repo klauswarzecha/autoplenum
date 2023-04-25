@@ -52,8 +52,6 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
         ).get()
         loader.add_value('longitude', longitude)
 
-
-
         reviews = response.xpath(
             '//section[@id="reviews"]/h2[@itemprop="aggregateRating"]'
         )
@@ -69,6 +67,14 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
             './span[@itemprop="ratingValue"]/@content'
         ).get()
         loader.add_value('rating_average', rating_average)
+
+        services = response.xpath(
+            '//div[contains(@class, "additional-info")]'
+            '/div[@class="txt-info"]/text()'
+        ).get()
+
+        loader.add_value('services', services)
+
 
         item = loader.load_item()
     
