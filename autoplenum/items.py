@@ -1,24 +1,54 @@
 # Define here the models for your scraped items
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy import Item
 from scrapy.item import Field
+from itemloaders.processors import Compose, MapCompose, TakeFirst
 
-class AutoplenumItem(scrapy.Item):
-    companyname = Field()
-    street = Field()
-    postalcode = Field()
-    locality = Field()
-
-    phone = Field()
-    fax = Field()
-    website = Field()
+class AutoplenumItem(Item):
     
-    services = Field()
 
-    review_count = Field()
-    rating_count = Field()
-    rating_average = Field()
+    companyname = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
+    street = Field(
+        output_processor=Compose(
+            TakeFirst(), str, str.strip, lambda x: x.strip(',')
+        )
+    )
+    postalcode = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
+    locality = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
 
-    latitude = Field()
-    longitude = Field()
+    phone = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
+    fax = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
+    website = Field(
+        output_processor=Compose(TakeFirst(), str.strip)
+    )
+    
+    services = Field(
+        output_processor=Compose(TakeFirst(), lambda x: x.split(','))
+    )
+
+    review_count = Field(
+        output_processor=Compose(TakeFirst(), int)
+    )
+    rating_count = Field(
+        output_processor=Compose(TakeFirst(), int)
+    )
+    rating_average = Field(
+     output_processor=Compose(TakeFirst(), float)
+    )
+    latitude = Field(
+        output_processor=Compose(TakeFirst(), float)
+    )
+    longitude = Field(
+        output_processor=Compose(TakeFirst(), float)
+    )
