@@ -22,31 +22,50 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
+        """Extract company information into fields of an item"""
         loader = ItemLoader(item=AutoplenumItem())
+        
         companyname = response.xpath(
             '//section[@id="header"]//h1[@itemprop="name"]/text()'
         ).get()
         loader.add_value('companyname', companyname)
+        
         contact = response.xpath('//section[@id="contact"]')
         address = contact.xpath('.//div[@itemprop="address"]')
+        
         street = address.xpath(
             './span[@itemprop="streetAddress"]/text()'
         ).get()
         loader.add_value('street', street)
+        
         postalcode = address.xpath(
             './span[@itemprop="postalCode"]/text()'
         ).get()
         loader.add_value('postalcode', postalcode)
+        
         locality = address.xpath(
             './span[@itemprop="addressLocality"]/text()'
         ).get()
         loader.add_value('locality', locality)
+
+        phone = response.xpath(
+            '//div[@class="row"]'
+            '/div[@itemprop="telephone"]/text()'
+        ).get()
+        loader.add_value('phone', phone)
+
+        website = response.xpath(
+            '//div[text()[contains(.,"Website")]]'
+            '/following-sibling::div/text()'
+        ).get()
+        loader.add_value('website', website)
 
         geo = contact.xpath('.//span[@itemprop="geo"]')
         latitude = geo.xpath(
             './meta[@itemprop="latitude"]/@content'
         ).get()
         loader.add_value('latitude', latitude)
+        
         longitude = geo.xpath(
             './meta[@itemprop="longitude"]/@content'
         ).get()
@@ -59,10 +78,12 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
             './span[@itemprop="reviewCount"]/@content'
         ).get()
         loader.add_value('review_count', review_count)
+        
         rating_count = reviews.xpath(
             './span[@itemprop="reviewCount"]/@content'
         ).get()
         loader.add_value('rating_count', rating_count)
+        
         rating_average = reviews.xpath(
             './span[@itemprop="ratingValue"]/@content'
         ).get()
@@ -74,7 +95,6 @@ class AutoplenumCompaniesSpider(scrapy.Spider):
         ).get()
 
         loader.add_value('services', services)
-
 
         item = loader.load_item()
     
